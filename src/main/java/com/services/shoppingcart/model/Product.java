@@ -20,6 +20,8 @@ public class Product {
     /* The Product Name. */
     private String productName;
 
+    /** The Discount Type */
+    private ProductDiscountType productDiscountType;
     /* The Product Price. */
     private BigDecimal productPrice;
 
@@ -28,6 +30,16 @@ public class Product {
         this.productCategory = productCategory;
         this.productDescription = productDescription;
         this.productName = productName;
+        this.productDiscountType = ProductDiscountType.NONE;
+        this.productPrice = productPrice;
+    }
+
+    public Product(String productId, String productCategory, String productDescription, String productName, ProductDiscountType productDiscountType, BigDecimal productPrice) {
+        this.productId = productId;
+        this.productCategory = productCategory;
+        this.productDescription = productDescription;
+        this.productName = productName;
+        this.productDiscountType = productDiscountType;
         this.productPrice = productPrice;
     }
 
@@ -45,6 +57,10 @@ public class Product {
 
     public String getProductName() {
         return productName;
+    }
+
+    public ProductDiscountType getProductDiscountType() {
+        return productDiscountType;
     }
 
     public BigDecimal getProductPrice() {

@@ -21,15 +21,27 @@ public class ShoppingCartItem {
     /* The Quantity */
     private int quantity;
 
-    /* The Shopping Cart Item Price */
-    private BigDecimal shoppingCartPrice;
+    /* The Shopping Cart Item Discount Amount */
+    private BigDecimal shoppingCartItemDiscountAmount;
 
-    public ShoppingCartItem(ShoppingCart shoppingCart, String shoppingCartItemId, Product product, int quantity, BigDecimal shoppingCartPrice) {
+    /* The Shopping Cart Item Price */
+    private BigDecimal shoppingCartItemPrice;
+
+    public ShoppingCartItem(ShoppingCart shoppingCart, String shoppingCartItemId, Product product, int quantity, BigDecimal shoppingCartItemPrice) {
         this.shoppingCart = shoppingCart;
         this.shoppingCartItemId = shoppingCartItemId;
         this.product = product;
         this.quantity = quantity;
-        this.shoppingCartPrice = shoppingCartPrice;
+        this.shoppingCartItemPrice = shoppingCartItemPrice;
+    }
+
+    public ShoppingCartItem(ShoppingCart shoppingCart, String shoppingCartItemId, Product product, int quantity, BigDecimal shoppingCartItemDiscountAmount, BigDecimal shoppingCartItemPrice) {
+        this.shoppingCart = shoppingCart;
+        this.shoppingCartItemId = shoppingCartItemId;
+        this.product = product;
+        this.quantity = quantity;
+        this.shoppingCartItemDiscountAmount = shoppingCartItemDiscountAmount;
+        this.shoppingCartItemPrice = shoppingCartItemPrice;
     }
 
     public Product getProduct() {
@@ -40,7 +52,19 @@ public class ShoppingCartItem {
         return quantity;
     }
 
-    public BigDecimal getShoppingCartPrice() {
-        return shoppingCartPrice;
+    public BigDecimal getShoppingCartItemPrice() {
+        return shoppingCartItemPrice;
+    }
+
+    public BigDecimal getShoppingCartItemDiscountAmount() {
+        return shoppingCartItemDiscountAmount;
+    }
+
+    public void setShoppingCartItemDiscountAmount(BigDecimal shoppingCartItemDiscountAmount) {
+        this.shoppingCartItemDiscountAmount = shoppingCartItemDiscountAmount;
+    }
+
+    public void setShoppingCartItemPrice(BigDecimal shoppingCartItemPrice) {
+        this.shoppingCartItemPrice = shoppingCartItemPrice;
     }
 }

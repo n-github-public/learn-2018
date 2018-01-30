@@ -14,8 +14,10 @@ public class ShoppingCart {
     /* The Shopping Card Id. */
     private String cartId;
 
+    /** The list of Shopping Cart Items */
     private List<ShoppingCartItem> cartItemList = new ArrayList<>();
 
+    /** Total Cart Price **/
     private BigDecimal totalCartPrice;
 
     public void setCartId(String cartId) {

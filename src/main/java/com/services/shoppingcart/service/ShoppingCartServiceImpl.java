@@ -6,6 +6,7 @@ import com.services.shoppingcart.model.Product;
 import com.services.shoppingcart.model.ShoppingCart;
 import com.services.shoppingcart.model.ShoppingCartItem;
 import com.services.shoppingcart.repository.ProductRepository;
+import com.services.shoppingcart.service.discount.cor.ShoppingCartItemDiscountCOR;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ShoppingCartItemDiscountCOR shoppingCartItemDiscountCOR;
     /**
      * Creates Shopping Cart from List of Product Names.
      *
@@ -59,13 +62,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             Product product = productRepository.getProduct(productName);
 
             Integer quantity = productQuantityMap.get(productName);
-            BigDecimal shoppingCartItemPrice = product.getProductPrice().multiply(new BigDecimal(quantity), mathContext);
+//            BigDecimal shoppingCartItemPrice = product.getProductPrice().multiply(new BigDecimal(quantity), mathContext);
+            BigDecimal shoppingCartItemPrice = product.getProductPrice().multiply(new BigDecimal(quantity));
 
             String cartItemId = UUID.randomUUID().toString();
             ShoppingCartItem shoppingCartItem = new ShoppingCartItem(shoppingCart, cartItemId, product, quantity, shoppingCartItemPrice);
 
-            totalShoppingCartPrice = totalShoppingCartPrice.add(shoppingCartItemPrice);
+            // Apply discount
+            BigDecimal discountAmount = shoppingCartItemDiscountCOR.calculateDiscount(shoppingCartItem);
+            shoppingCartItemPrice = shoppingCartItemPrice.subtract(discountAmount, mathContext);
 
+            totalShoppingCartPrice = totalShoppingCartPrice.add(shoppingCartItemPrice);
+            shoppingCartItem.setShoppingCartItemDiscountAmount(discountAmount);
+            shoppingCartItem.setShoppingCartItemPrice(shoppingCartItemPrice);
             shoppingCart.getCartItemList().add(shoppingCartItem);
         }
         shoppingCart.setTotalCartPrice(totalShoppingCartPrice);
