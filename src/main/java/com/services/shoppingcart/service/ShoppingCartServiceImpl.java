@@ -2,10 +2,21 @@ package com.services.shoppingcart.service;
 
 import com.services.shoppingcart.exception.ProductNotFoundException;
 import com.services.shoppingcart.exception.ShoppingCartException;
+import com.services.shoppingcart.model.Product;
 import com.services.shoppingcart.model.ShoppingCart;
+import com.services.shoppingcart.model.ShoppingCartItem;
+import com.services.shoppingcart.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The Shopping Cart Service Implementation.
@@ -14,6 +25,9 @@ import java.util.List;
  */
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
+    @Autowired
+    private ProductRepository productRepository;
+
     /**
      * Creates Shopping Cart from List of Product Names.
      *
@@ -23,6 +37,38 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      * @throws ShoppingCartException if there was a problem in creating shopping cart.
      */
     public ShoppingCart createShoppingCart(List<String> productNameList) throws ProductNotFoundException, ShoppingCartException {
-        throw new ProductNotFoundException("Product [xyz] Not Found");
+        // TODO: apply this project wise.
+        MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+
+        Map<String, Integer> productQuantityMap = new HashMap<>();
+        for(String productName : productNameList){
+            if(productQuantityMap.containsKey(productName)){
+                Integer quantity = productQuantityMap.get(productName);
+                productQuantityMap.put(productName, quantity + 1);
+            } else {
+                productQuantityMap.put(productName, 1);
+            }
+        }
+
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setCartId(UUID.randomUUID().toString());
+
+        BigDecimal totalShoppingCartPrice = BigDecimal.ZERO;
+        List<String> productNameKeysList = new ArrayList<>(productQuantityMap.keySet());
+        for(String productName : productNameKeysList){
+            Product product = productRepository.getProduct(productName);
+
+            Integer quantity = productQuantityMap.get(productName);
+            BigDecimal shoppingCartItemPrice = product.getProductPrice().multiply(new BigDecimal(quantity), mathContext);
+
+            String cartItemId = UUID.randomUUID().toString();
+            ShoppingCartItem shoppingCartItem = new ShoppingCartItem(shoppingCart, cartItemId, product, quantity, shoppingCartItemPrice);
+
+            totalShoppingCartPrice = totalShoppingCartPrice.add(shoppingCartItemPrice);
+
+            shoppingCart.getCartItemList().add(shoppingCartItem);
+        }
+        shoppingCart.setTotalCartPrice(totalShoppingCartPrice);
+        return shoppingCart;
     }
 }

@@ -31,4 +31,16 @@ public class ShoppingCartItem {
         this.quantity = quantity;
         this.shoppingCartPrice = shoppingCartPrice;
     }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public BigDecimal getShoppingCartPrice() {
+        return shoppingCartPrice;
+    }
 }

@@ -22,8 +22,20 @@ public class ShoppingCart {
         this.cartId = cartId;
     }
 
+    public List<ShoppingCartItem> getCartItemList() {
+        return cartItemList;
+    }
+
     public void setCartItemList(List<ShoppingCartItem> cartItemList) {
         this.cartItemList = cartItemList;
+    }
+
+    public String getCartId() {
+        return cartId;
+    }
+
+    public BigDecimal getTotalCartPrice() {
+        return totalCartPrice;
     }
 
     public void setTotalCartPrice(BigDecimal totalCartPrice) {
